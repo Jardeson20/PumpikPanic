@@ -1,15 +1,22 @@
+from code.Menu import Menu
 import pygame
 
-print('Setup Start')
+# Inicializa o PyGame
 pygame.init()
-window = pygame.display.set_mode(size=(600, 480))
-print('Setup End')
 
-print('Loop Start')
-while True:
-    # Check for all events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            print('Quitting...')
-            pygame.quit()  # Close window
-            quit()
+# Cria a janela do jogo com resolução 1920x1080
+window = pygame.display.set_mode((1280, 720))
+
+# Cria o menu
+menu = Menu(window)
+
+# Executa o menu
+action = menu.run()
+
+# Verifica a ação escolhida pelo jogador
+if action == "start":
+    print("Iniciar Jogo")
+elif action == "options":
+    print("Abrir Opções")
+elif action == "quit":
+    print("Sair do Jogo")
