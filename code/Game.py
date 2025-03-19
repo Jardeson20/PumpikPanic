@@ -1,6 +1,7 @@
 import pygame
 from code.Player import Player
 from code.Background import Background
+from code.Obstacle import Obstacle
 
 class Game:
     def __init__(self, window):
@@ -9,8 +10,16 @@ class Game:
         self.score = 0
         self.player = Player(window)  # Cria o jogador
         self.background = Background(window)  # Cria o fundo
+        self.obstacle = Obstacle(window)  # Cria os obstáculos
         self.game_sound = pygame.mixer.Sound("asset/game_sound.wav")  # Carrega o som de fundo
         self.finish_sound = pygame.mixer.Sound("asset/finishGame_sound.wav")  # Carrega o som de fim de jogo
+        self.font = pygame.font.Font("asset/zombie.ttf", 36)  # Fonte para o score
+        self.passed_obstacles = set()  # Conjunto para rastrear obstáculos já pontuados
+
+    def draw_score(self):
+        # Desenha o score na tela
+        score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))  # Texto branco
+        self.window.blit(score_text, (10, 10))  # Posição do score no canto superior esquerdo
 
     def game_over(self):
         # Para a música de fundo do jogo
@@ -62,8 +71,27 @@ class Game:
             if self.player.rect.bottom >= self.window.get_height():
                 return self.game_over()  # Chama a função game_over
 
+            # Atualiza os obstáculos
+            self.obstacle.update()
+
+            # Verifica colisão com os obstáculos
+            if self.obstacle.check_collision(self.player.hitbox):
+                return self.game_over()  # Chama a função game_over
+
+            # Verifica se o jogador passou por um obstáculo
+            for obs in self.obstacle.obstacles:
+                if obs[1].right < self.player.rect.left and id(obs) not in self.passed_obstacles:
+                    self.score += 1  # Incrementa o score
+                    self.passed_obstacles.add(id(obs))  # Marca o obstáculo como pontuado
+
+            # Desenha os obstáculos
+            self.obstacle.draw_obstacles()
+
             # Desenha o jogador
             self.player.draw()
+
+            # Desenha o score
+            self.draw_score()
 
             # Atualiza a tela
             pygame.display.update()
