@@ -8,7 +8,7 @@ class Player:
         self.rect = self.image.get_rect(center=(100, window.get_height() // 2))  # Posição inicial
         self.velocity = 0  # Velocidade vertical do jogador
         self.gravity = 0.5  # Força da gravidade
-        self.hitbox = pygame.Rect(0, 0, 60, 60)  # Hitbox ajustada
+        self.hitbox = pygame.Rect(10, 10, 50, 50)  # Hitbox ajustada
         self.update_hitbox()  # Atualiza a posição da hitbox
 
     def update_hitbox(self):
@@ -38,5 +38,3 @@ class Player:
     def draw(self):
         # Desenha o jogador na tela
         self.window.blit(self.image, self.rect)
-        # Desenha a hitbox (opcional, para debug)
-        # pygame.draw.rect(self.window, (255, 0, 0), self.hitbox, 2)

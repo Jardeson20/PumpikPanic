@@ -1,4 +1,5 @@
 import pygame
+from code.Score import ScoreManager  # Importa o ScoreManager
 
 class Menu:
     def __init__(self, window):
@@ -8,12 +9,7 @@ class Menu:
         self.small_font = pygame.font.Font("asset/zombie.ttf", 36)  # Fonte menor para os botões
         self.menu_background = pygame.image.load("asset/menu.png")  # Carrega a imagem de fundo
         self.menu_sound = pygame.mixer.Sound("asset/menu_sound.wav")  # Carrega o som de fundo
-        self.scores = []  # Lista para armazenar as pontuações (em memória)
-
-    def add_score(self, score):
-        # Adiciona uma nova pontuação à lista (em memória)
-        self.scores.append(score)
-        self.scores = sorted(self.scores, reverse=True)[:10]  # Mantém apenas as 10 maiores
+        self.score_manager = ScoreManager()  # Instancia o ScoreManager
 
     def draw_button(self, text, position, action=None):
         # Desenha um botão na tela
@@ -30,18 +26,10 @@ class Menu:
             return action
         return None
 
-    def fade_transition(self):
-        # Cria uma superfície para o efeito de fade
-        fade_surface = pygame.Surface((self.window.get_width(), self.window.get_height()))
-        fade_surface.fill((0, 0, 0))  # Preto
-
-        for alpha in range(0, 255, 5):  # Aumenta a opacidade gradualmente
-            fade_surface.set_alpha(alpha)
-            self.window.blit(fade_surface, (0, 0))
-            pygame.display.update()
-            pygame.time.delay(30)
-
     def show_scores(self):
+        # Carrega as pontuações
+        high_scores = self.score_manager.load_scores()
+
         while True:  # Loop do menu de pontuações
             # Desenha a imagem de fundo
             self.window.blit(self.menu_background, (0, 0))
@@ -53,7 +41,7 @@ class Menu:
 
             # Exibe as pontuações
             y_offset = 200
-            for i, score in enumerate(self.scores):  # Exibe as 10 maiores pontuações
+            for i, score in enumerate(high_scores):  # Exibe as 10 maiores pontuações
                 score_text = self.small_font.render(f"{i + 1}. {score}", True, (255, 255, 255))  # Texto branco
                 score_rect = score_text.get_rect(center=(self.window.get_width() // 2, y_offset))
                 self.window.blit(score_text, score_rect)
@@ -97,14 +85,11 @@ class Menu:
 
             # Verifica se algum botão foi clicado
             if start_action:
-                self.fade_transition()  # Efeito de transição
                 return "start"
             if score_action:
-                self.fade_transition()  # Efeito de transição
                 self.show_scores()  # Exibe o menu de pontuações
                 # Após retornar do menu de pontuações, continua no loop do menu principal
             if quit_action:
-                self.fade_transition()  # Efeito de transição
                 return "quit"
 
             # Atualiza a tela

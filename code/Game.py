@@ -2,6 +2,7 @@ import pygame
 from code.Player import Player
 from code.Background import Background
 from code.Obstacle import Obstacle
+from code.Score import ScoreManager  # Importa o ScoreManager
 
 class Game:
     def __init__(self, window):
@@ -15,6 +16,7 @@ class Game:
         self.finish_sound = pygame.mixer.Sound("asset/finishGame_sound.wav")  # Carrega o som de fim de jogo
         self.font = pygame.font.Font("asset/zombie.ttf", 36)  # Fonte para o score
         self.passed_obstacles = set()  # Conjunto para rastrear obstáculos já pontuados
+        self.score_manager = ScoreManager()  # Instancia o ScoreManager
 
     def draw_score(self):
         # Desenha o score na tela
@@ -27,6 +29,9 @@ class Game:
 
         # Toca o som de fim de jogo
         self.finish_sound.play()
+
+        # Salva a pontuação atual
+        self.score_manager.save_score(self.score)
 
         # Congela a tela e exibe "Game Over"
         font = pygame.font.Font("asset/zombie.ttf", 72)  # Fonte para "Game Over"
@@ -75,7 +80,7 @@ class Game:
             self.obstacle.update()
 
             # Verifica colisão com os obstáculos
-            if self.obstacle.check_collision(self.player.hitbox):
+            if self.obstacle.check_collision(self.player.rect):
                 return self.game_over()  # Chama a função game_over
 
             # Verifica se o jogador passou por um obstáculo
