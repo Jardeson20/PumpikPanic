@@ -2,7 +2,7 @@ import pygame
 from code.Player import Player
 from code.Background import Background
 from code.Obstacle import Obstacle
-from code.Score import ScoreManager  # Importa o ScoreManager
+from code.Score import Score  # Importa a classe Score
 
 class Game:
     def __init__(self, window):
@@ -16,7 +16,7 @@ class Game:
         self.finish_sound = pygame.mixer.Sound("asset/finishGame_sound.wav")  # Carrega o som de fim de jogo
         self.font = pygame.font.Font("asset/zombie.ttf", 36)  # Fonte para o score
         self.passed_obstacles = set()  # Conjunto para rastrear obstáculos já pontuados
-        self.score_manager = ScoreManager()  # Instancia o ScoreManager
+        self.score_manager = Score()  # Instancia a classe Score
 
     def draw_score(self):
         # Desenha o score na tela

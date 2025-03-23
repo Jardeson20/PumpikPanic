@@ -1,6 +1,6 @@
 import sqlite3
 
-class ScoreManager:
+class Score:
     def __init__(self, db_file="pumpik_panic.db"):
         self.db_file = db_file
         self.create_table()  # Cria a tabela se não existir
@@ -31,10 +31,10 @@ class ScoreManager:
         conn.close()
 
     def load_scores(self):
-        # Carrega as 10 maiores pontuações do banco de dados
+        # Carrega as 5 maiores pontuações do banco de dados
         conn = sqlite3.connect(self.db_file)
         cursor = conn.cursor()
-        cursor.execute("SELECT score FROM scores ORDER BY score DESC LIMIT 10")
+        cursor.execute("SELECT score FROM scores ORDER BY score DESC LIMIT 5")  # Alterado para LIMIT 5
         scores = [row[0] for row in cursor.fetchall()]  # Extrai os scores
         conn.close()
         return scores
